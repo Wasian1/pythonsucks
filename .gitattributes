@@ -1,0 +1,12 @@
+# Force LF line endings for all Python source files
+*.py text eol=lf
+
+# CSV files should also use LF line endings for consistency across OS
+*.csv text eol=lf
+
+# Binary files (GIFs, images) should be left untouched
+*.gif binary
+
+# Optional: Dockerfile and shell scripts
+Dockerfile text eol=lf
+*.sh text eol=lf

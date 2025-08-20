@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  # Image file name
+  pythonsucks-discordbot:
+    build: .
+    container_name: pythonsucksbot
+
+    # Inject secrets at runtime (not baked into the image)
+    env_file: settings.env
+
+    # Restart policy: keep the bot alive across crashes and reboots
+    restart: always
+
+    # Mount DATA ONLY so CSV updates don't require rebuilds.
+    # On the host (Pi), ./data maps to /botapp/data inside the container.
+    volumes:
+      - ./data:/botapp/data:rw
+
+    # Optional healthcheck to ensure the container is "healthy"
+    # (uncomment and adapt to your bot if you expose a health endpoint or add a small script)
+    # healthcheck:
+    #   test: ["CMD", "python", "-c", "import socket; s=socket.socket(); s.connect(('discord.com', 443)); s.close()"]
+    #   interval: 30s
+    #   timeout: 5s
+    #   retries: 5

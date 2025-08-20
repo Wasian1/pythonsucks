@@ -1,0 +1,29 @@
+# Use a lightweight Python base image (slim variant to reduce image size)
+FROM python:3.13.3-slim
+
+# Set a working directory inside the container
+# This is where all bot files will live
+WORKDIR /botapp
+
+# Step 1: Copy only requirements.txt first
+# Why? Docker caches layers. If requirements.txt hasn’t changed,
+# this layer is reused and pip install isn’t run again,
+# even if your code changes later.
+COPY requirements.txt .
+
+# Step 2: Install dependencies
+# --no-cache-dir prevents pip from storing its cache inside the image,
+# reducing image size.
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Step 3: Copy the rest of your code (all bot files, CSVs, cogs, GIF)
+# This is separated from dependencies to leverage layer caching.
+COPY . .
+
+# Step 4: Expose any ports if needed (optional)
+# For Discord bot, usually not required, but you could expose 80/443 if running a web server.
+# EXPOSE 80
+
+# Step 5: Run your bot
+# CMD specifies the default command to run when the container starts
+CMD ["python", "main.py"]
