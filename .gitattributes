@@ -8,5 +8,5 @@
 *.gif binary
 
 # Optional: Dockerfile and shell scripts
-Dockerfile text eol=lf
+*.Dockerfile text eol=lf
 *.sh text eol=lf

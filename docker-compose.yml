@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   # Image file name
   pythonsucks-discordbot:
