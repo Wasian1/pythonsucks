@@ -1,39 +1,45 @@
-# Use a lightweight Python base image (slim variant to reduce image size)
+# ------------------------------
+# Step 0: Base Image
+# ------------------------------
 FROM python:3.13.3-slim
 
-# Install build tools needed for compiling packages like numpy
-RUN apt-get update && apt-get install -y \
+# ------------------------------
+# Step 1: Install system dependencies
+# ------------------------------
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     gcc \
     gfortran \
     libatlas-base-dev \
     python3-dev \
+    libffi-dev \
+    libssl-dev \
+    git \
  && rm -rf /var/lib/apt/lists/*
 
 
-# Set a working directory inside the container
-# This is where all bot files will live
+# ------------------------------
+# Step 2: Set working directory
+# ------------------------------
 WORKDIR /botapp
 
-# Step 1: Copy only requirements.txt first
-# Why? Docker caches layers. If requirements.txt hasn’t changed,
-# this layer is reused and pip install isn’t run again,
-# even if your code changes later.
+# ------------------------------
+# Step 3: Copy only requirements first
+# ------------------------------
 COPY requirements.txt .
 
-# Step 2: Install dependencies
-# --no-cache-dir prevents pip from storing its cache inside the image,
-# reducing image size.
-RUN pip install --no-cache-dir -r requirements.txt
+# ------------------------------
+# Step 4: Install Python dependencies
+# ------------------------------
+RUN pip install --no-cache-dir --upgrade pip \
+ && pip install --no-cache-dir -r requirements.txt
 
-# Step 3: Copy the rest of your code (all bot files, CSVs, cogs, GIF)
-# This is separated from dependencies to leverage layer caching.
+# ------------------------------
+# Step 5: Copy the rest of your code
+# ------------------------------
 COPY . .
 
-# Step 4: Expose any ports if needed (optional)
-# For Discord bot, usually not required, but you could expose 80/443 if running a web server.
-# EXPOSE 80
-
-# Step 5: Run your bot
-# CMD specifies the default command to run when the container starts
+# ------------------------------
+# Step 6: Run the bot
+# ------------------------------
 CMD ["python", "main.py"]
