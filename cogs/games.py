@@ -236,7 +236,7 @@ class Games(commands.Cog):
 
         kpop_group_data = pd.read_csv('kpop_data/kpop_full_idol_list.csv', header=0)
         # If first column has no name, rename to "Gender"
-        if kpop_group_data.columns[0] == "" or kpop_group_data.columns[0].lower() == "Unnamed: 0":
+        if kpop_group_data.columns[0] == "" or kpop_group_data.columns[0].startswith("Unnamed"):
           kpop_group_data.rename(columns={kpop_group_data.columns[0]: "Gender"}, inplace=True)
         # Check import of data
         print(kpop_group_data.columns)
