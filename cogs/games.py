@@ -237,23 +237,25 @@ class Games(commands.Cog):
         pd.set_option('display.max_colwidth', 30)
         pd.set_option('display.expand_frame_repr', False)
 
+        # Load CSV
         kpop_group_data = pd.read_csv(
             'kpop_data/kpop_full_idol_list.csv',
             index_col=False,
-            encoding='utf-8-sig',
+            encoding="utf-8-sig",
             quotechar='"',
             skipinitialspace=True
         )
 
-        # Show raw column names as Python repr() to catch hidden characters
-        logger.info("Raw CSV columns: %s", [repr(c) for c in kpop_group_data.columns.tolist()])
+        # Clean column names (remove BOM, whitespace, etc.)
+        kpop_group_data.columns = [c.replace('\ufeff','').strip() for c in kpop_group_data.columns]
 
-        # Strip whitespace from all column names
-        kpop_group_data.columns = [c.strip() for c in kpop_group_data.columns]
+        # Send the actual column names to Discord for debugging
+        await ctx.send(f"Columns after cleaning: {kpop_group_data.columns.tolist()}")
 
-        # Now rename first column explicitly (if needed)
-        kpop_group_data.rename(columns={kpop_group_data.columns[0]: 'Gender'}, inplace=True)
-        logger.info("Columns after renaming & stripping: %s", kpop_group_data.columns.tolist())
+        # Make sure Gender column exists
+        if 'Gender' not in kpop_group_data.columns:
+            await ctx.send("Error: CSV does not contain a 'Gender' column.")
+            return
 
         # Strip whitespace inside 'Gender' values too
         kpop_group_data['Gender'] = kpop_group_data['Gender'].astype(str).str.strip()
