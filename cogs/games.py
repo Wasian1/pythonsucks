@@ -234,7 +234,13 @@ class Games(commands.Cog):
         pd.set_option('display.max_colwidth', 30)
         pd.set_option('display.expand_frame_repr', False)
 
-        kpop_group_data = pd.read_csv('kpop_data/kpop_full_idol_list.csv')
+        kpop_group_data = pd.read_csv('kpop_data/kpop_full_idol_list.csv', header=0)
+        # If first column has no name, rename to "Gender"
+        if kpop_group_data.columns[0] == "" or kpop_group_data.columns[0].lower() == "unamed: 0":
+          kpop_group_data.rename(columns={kpop_group_data[0]: "Gender"}, inplace=True)
+        # Check import of data
+        print(kpop_group_data.head())
+        
         boy_real_names = kpop_group_data.loc[kpop_group_data['Gender'] == 'Male', 'Full Name']
         boy_real_names_list = list(boy_real_names)
         boy_real_names_random = random.choice(boy_real_names_list)
