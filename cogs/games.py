@@ -241,25 +241,11 @@ class Games(commands.Cog):
         kpop_group_data = pd.read_csv('kpop_data/kpop_full_idol_list.csv', encoding="utf-8-sig", quotechar='"', skipinitialspace=True)
 
         await ctx.send(logger.info("CSV columns: %s", kpop_group_data.columns.tolist()))
+        # Rename first column to 'Gender'
+        kpop_group_data = kpop_group_data.rename(columns={kpop_group_data.columns[0]: 'Gender'})
 
-        # Normalize column names (remove spaces, lowercase)
-        kpop_group_data.columns = [col.strip() for col in kpop_group_data.columns]
-
-        # Try to detect gender column
-        gender_col = None
-        for col in kpop_group_data.columns:
-            if kpop_group_data[col].dropna().astype(str).str.lower().isin(['female','male']).any():
-                gender_col = col
-                break
-
-        if gender_col is None:
-            await ctx.send("⚠️ Could not find a gender column in the CSV.")
-            return
-
-        # Rename to 'Gender' if not already
-        if gender_col != 'Gender':
-            kpop_group_data = kpop_group_data.rename(columns={gender_col: 'Gender'})
-
+        # Now 'Gender' exists
+        logger.info("Columns after renaming: %s", kpop_group_data.columns.tolist())
 
         boy_real_names = kpop_group_data.loc[kpop_group_data['Gender'] == 'Male', 'Full Name']
         boy_real_names_list = list(boy_real_names)
