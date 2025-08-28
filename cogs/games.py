@@ -11,7 +11,10 @@ import async_cse
 from bs4 import BeautifulSoup
 import asyncio
 import nest_asyncio
-#nest_asyncio.apply()
+import logging
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 GCS_DEVELOPER_KEY = os.environ.get("GOOGLE_KEY")
 
@@ -234,19 +237,22 @@ class Games(commands.Cog):
         pd.set_option('display.max_colwidth', 30)
         pd.set_option('display.expand_frame_repr', False)
 
-        kpop_group_data = pd.read_csv('kpop_data/kpop_full_idol_list.csv', header=0)
+        # Load CSV and treat first column as index
+        kpop_group_data = pd.read_csv('kpop_data/kpop_full_idol_list.csv', index_col=0)
 
-        print(kpop_group_data.columns.tolist())
-        print(kpop_group_data.head(1))
+        # If the index is actually the gender, move it back into a column
+        if kpop_group_data.index.name in [None, '', 'Unnamed: 0']:
+            kpop_group_data.reset_index(inplace=True)
+            kpop_group_data.rename(columns={kpop_group_data.columns[0]: "Gender"}, inplace=True)
 
-        # Strip whitespace from all column names
+        # Strip whitespace from all columns just in case
         kpop_group_data.columns = [c.strip() for c in kpop_group_data.columns]
 
-        # If first column has no name, rename to "Gender"
-        if kpop_group_data.columns[0] == "" or kpop_group_data.columns[0].startswith("Unnamed"):
-          kpop_group_data.rename(columns={kpop_group_data.columns[0]: "Gender"}, inplace=True)
-        # Check import of data
-        print(kpop_group_data.columns)
+        # Validate the Gender column exists
+        if "Gender" not in kpop_group_data.columns:
+          await ctx.send("CSV file does not contain a 'Gender' column. Check your CSV.")
+          logger.error("Gender column missing from CSV")
+          return
 
         boy_real_names = kpop_group_data.loc[kpop_group_data['Gender'] == 'Male', 'Full Name']
         boy_real_names_list = list(boy_real_names)
@@ -274,14 +280,15 @@ class Games(commands.Cog):
         random_boy_birthday1 = random_boy_birthday.to_string(index=False)
         random_boy_stage_name1 = random_boy_stage_name.to_string(index=False)
         random_boy_name = boy_name.to_string(index=False)
-       
 
-        print(random_boy_name)
-        print(random_boy_group1)
-        print(random_boy_country1)
-        print(random_boy_hometown1)
-        print(random_boy_birthday1)
-        print(random_boy_stage_name1)
+        # Log info for debugging
+        logger.info("Random idol selected:")
+        logger.info("Stage Name: %s", random_boy_stage_name1)
+        logger.info("Full Name: %s", random_boy_name)
+        logger.info("Group: %s", random_boy_group1)
+        logger.info("Birthplace: %s", random_boy_hometown1)
+        logger.info("Country: %s", random_boy_country1)
+        logger.info("Date of Birth: %s", random_boy_birthday1)
 
         async def google_image_search():
           global male_idol_resp
