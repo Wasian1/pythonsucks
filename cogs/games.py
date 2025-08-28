@@ -238,18 +238,25 @@ class Games(commands.Cog):
         pd.set_option('display.expand_frame_repr', False)
 
         kpop_group_data = pd.read_csv(
-          'kpop_data/kpop_full_idol_list.csv',
-          index_col=False,
-          encoding="utf-8-sig",
-          quotechar='"',
-          skipinitialspace=True
+            'kpop_data/kpop_full_idol_list.csv',
+            index_col=False,
+            encoding='utf-8-sig',
+            quotechar='"',
+            skipinitialspace=True
         )
 
-        # Force rename in place
-        kpop_group_data.rename(columns={kpop_group_data.columns[0]: 'Gender'}, inplace=True)
+        # Show raw column names as Python repr() to catch hidden characters
+        logger.info("Raw CSV columns: %s", [repr(c) for c in kpop_group_data.columns.tolist()])
 
-        # Log actual columns to be sure Docker sees it
-        logger.info("Columns after rename: %s", kpop_group_data.columns.tolist())
+        # Strip whitespace from all column names
+        kpop_group_data.columns = [c.strip() for c in kpop_group_data.columns]
+
+        # Now rename first column explicitly (if needed)
+        kpop_group_data.rename(columns={kpop_group_data.columns[0]: 'Gender'}, inplace=True)
+        logger.info("Columns after renaming & stripping: %s", kpop_group_data.columns.tolist())
+
+        # Strip whitespace inside 'Gender' values too
+        kpop_group_data['Gender'] = kpop_group_data['Gender'].astype(str).str.strip()
 
         boy_real_names = kpop_group_data.loc[kpop_group_data['Gender'] == 'Male', 'Full Name']
         boy_real_names_list = list(boy_real_names)
