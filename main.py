@@ -4,7 +4,6 @@ import sys
 import os
 from dotenv import load_dotenv
 import datetime
-from flask import Flask
 from typing import cast
 
 import discord
@@ -17,21 +16,6 @@ import wavelink
 import logging
 
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "settings.env"))
-
-app = Flask('')
-
-@app.route('/')
-def home():
-    return "I'm alive"
-
-def run():
-  app.run(host='0.0.0.0',port=8000)
-
-def keep_alive():  
-    t = Thread(target=run)
-    t.start()
-
-keep_alive()
 
 target_message_id = 1068981877425315982
 
@@ -115,15 +99,11 @@ bot: Bot = Bot()
 
 
 
-@bot.command(name= 'restart')
+@bot.command(name='restart')
 async def restart(ctx):
-  """Kyoko さま needs a reboot"""
-  await ctx.send("Restarting bot...")
-  restart_script()
-
-def restart_script():
-  script_path = os.path.abspath(__file__)  # Full path to this file
-  os.execv(sys.executable, [sys.executable, script_path])
+    await ctx.send("Restarting bot...")
+    await bot.close()  # Gracefully closes connections
+    # Docker will restart the container if restart: always is set
 
 @bot.command()
 async def join(ctx, *, channel_name: str = None):
@@ -653,8 +633,8 @@ async def on_raw_reaction_remove(payload):
 
 @tasks.loop(seconds = 60)
 async def birthday_test_1():
-  channel = bot.get_channel(132220236425330688)
-  print(f"Got channel {channel}")
+  az_channel = bot.get_channel(132220236425330688)
+  print(f"Got channel {az_channel}")
 
   az_timezone = ZoneInfo('US/Arizona')
   replit_time = datetime.datetime.now()
@@ -671,7 +651,7 @@ async def birthday_test_1():
   curmonth = str(current_az_month)
   curday = str(current_az_day)
   birthdate = curmonth + " " + curday
-  birthday_send_time = "13:50"
+  birthday_send_time = "7:00"
   print(birthdate)
 
 
@@ -795,92 +775,92 @@ async def birthday_test_1():
   if current_az_time == birthday_send_time:
 
     if birthdate == nick_c_birthday:
-      await channel.send(embed = nick_c_embed)
-      await channel.send("<@185638282099425281> 🔥🔥🔥<:hypers:1063164818112131182><:hypers:1063164818112131182><:hypers:1063164818112131182>🔥🔥🔥")
+      await az_channel.send(embed = nick_c_embed)
+      await az_channel.send("<@185638282099425281> 🔥🔥🔥<:hypers:1063164818112131182><:hypers:1063164818112131182><:hypers:1063164818112131182>🔥🔥🔥")
     elif birthdate == bot_birthday:
-      await channel.send(embed = embed)
-      await channel.send("<@921659541073051659> 🔥🔥🔥<:PythonBot:1219021028764815432><:PythonBot:1219021028764815432>️<:PythonBot:1219021028764815432>🔥🔥🔥")
+      await az_channel.send(embed = embed)
+      await az_channel.send("<@921659541073051659> 🔥🔥🔥<:PythonBot:1219021028764815432><:PythonBot:1219021028764815432>️<:PythonBot:1219021028764815432>🔥🔥🔥")
     elif birthdate == zach_birthday:
-      await channel.send(embed = zach_embed)
-      await channel.send("<@137301812741931008> <:zach:244228213172076544><:zach:244228213172076544><:zach:244228213172076544><:zach:244228213172076544><:zach:244228213172076544>")
+      await az_channel.send(embed = zach_embed)
+      await az_channel.send("<@137301812741931008> <:zach:244228213172076544><:zach:244228213172076544><:zach:244228213172076544><:zach:244228213172076544><:zach:244228213172076544>")
     elif birthdate  == may_birthday:
-      await channel.send(embed = may_embed)
-      await channel.send("<@141197293360513024> :sheep::sheep::sheep:<:pog:979009312783495190><:pog:979009312783495190>")
+      await az_channel.send(embed = may_embed)
+      await az_channel.send("<@141197293360513024> :sheep::sheep::sheep:<:pog:979009312783495190><:pog:979009312783495190>")
     elif birthdate == andrew_birthday:
-      await channel.send(embed = andrew_embed)
-      await channel.send("<@115918075370405888> <:andrew:230168932353310720><:andyru:262474347397120000><:andrew:230168932353310720><:andyru:262474347397120000>")
+      await az_channel.send(embed = andrew_embed)
+      await az_channel.send("<@115918075370405888> <:andrew:230168932353310720><:andyru:262474347397120000><:andrew:230168932353310720><:andyru:262474347397120000>")
     elif birthdate == mason_birthday:
-      await channel.send(embed = mason_embed)
-      await channel.send("<@321731874340864000> <:mason:322280884570947587><:mason:322280884570947587><:mason:322280884570947587><:mason:322280884570947587><:mason:322280884570947587>")
+      await az_channel.send(embed = mason_embed)
+      await az_channel.send("<@321731874340864000> <:mason:322280884570947587><:mason:322280884570947587><:mason:322280884570947587><:mason:322280884570947587><:mason:322280884570947587>")
     elif birthdate == eli_birthday:
-      await channel.send(embed = eli_embed)
-      await channel.send("<:eli:230168985826492426><:eli:230168985826492426><:eli:230168985826492426>")
+      await az_channel.send(embed = eli_embed)
+      await az_channel.send("<:eli:230168985826492426><:eli:230168985826492426><:eli:230168985826492426>")
     elif birthdate == eve_birthday:
-      await channel.send(embed = eve_embed)
-      await channel.send("<@279132667298054145> :tada: :tada: :tada: :tada: :tada:")
+      await az_channel.send(embed = eve_embed)
+      await az_channel.send("<@279132667298054145> :tada: :tada: :tada: :tada: :tada:")
     elif birthdate == chris_birthday:
-      await channel.send(embed = chris_embed)
-      await channel.send("<@115993234265604096> <:chris:319226266387611648><:chris:319226266387611648><:chris:319226266387611648><:chris:319226266387611648><:chris:319226266387611648>")
+      await az_channel.send(embed = chris_embed)
+      await az_channel.send("<@115993234265604096> <:chris:319226266387611648><:chris:319226266387611648><:chris:319226266387611648><:chris:319226266387611648><:chris:319226266387611648>")
     elif birthdate == caleb_birthday:
-      await channel.send(embed = caleb_embed)
-      await channel.send("<@121884732546875392> <:PogOfGreed:721505607781187617><:PogOfGreed:721505607781187617><:PogOfGreed:721505607781187617><:NyanPog:957170859641040907><:NyanPog:957170859641040907>")
+      await az_channel.send(embed = caleb_embed)
+      await az_channel.send("<@121884732546875392> <:PogOfGreed:721505607781187617><:PogOfGreed:721505607781187617><:PogOfGreed:721505607781187617><:NyanPog:957170859641040907><:NyanPog:957170859641040907>")
     elif birthdate == razor_birthday:
-      await channel.send(embed = razor_embed)
-      await channel.send("<@122173449123790848> ☠️❤️☠️❤️☠️❤️ :walW::walW:")
+      await az_channel.send(embed = razor_embed)
+      await az_channel.send("<@122173449123790848> ☠️❤️☠️❤️☠️❤️ :walW::walW:")
     elif birthdate == nic_m_birthday:
-      await channel.send(embed = nicm_embed)
-      await channel.send("<@115927815794327554> <:nic:230169190856785920><:nic:230169190856785920><:nic:230169190856785920><:nic:230169190856785920><:nic:230169190856785920>")
+      await az_channel.send(embed = nicm_embed)
+      await az_channel.send("<@115927815794327554> <:nic:230169190856785920><:nic:230169190856785920><:nic:230169190856785920><:nic:230169190856785920><:nic:230169190856785920>")
     elif birthdate == kevin_birthday:
-      await channel.send(embed = kevin_embed)
-      await channel.send("<@115906785537163271> <:kevin:230169044311867392><:kevin:230169044311867392><:kevin:230169044311867392><:kevin:230169044311867392><:kevin:230169044311867392>")
+      await az_channel.send(embed = kevin_embed)
+      await az_channel.send("<@115906785537163271> <:kevin:230169044311867392><:kevin:230169044311867392><:kevin:230169044311867392><:kevin:230169044311867392><:kevin:230169044311867392>")
     elif birthdate == brand_birthday:
-      await channel.send(embed = brandon_embed)
-      await channel.send("<@187637949008052224> <:brandon:308848163861692426><:brandon:308848163861692426><:brandon:308848163861692426><:brandon:308848163861692426><:brandon:308848163861692426>")
+      await az_channel.send(embed = brandon_embed)
+      await az_channel.send("<@187637949008052224> <:brandon:308848163861692426><:brandon:308848163861692426><:brandon:308848163861692426><:brandon:308848163861692426><:brandon:308848163861692426>")
     elif birthdate == lexi_birthday:
-      await channel.send(embed = lexi_embed)
-      await channel.send("<@115952162621751304> <:NyanPog:957170859641040907> :partying_face: :tada: :partying_face: ")
+      await az_channel.send(embed = lexi_embed)
+      await az_channel.send("<@115952162621751304> <:NyanPog:957170859641040907> :partying_face: :tada: :partying_face: ")
     elif birthdate == devin_birthday:
-      await channel.send(embed = devin_embed)
-      await channel.send("<@116009569045446657> <:smugDev:571579678465196032><:smugDev:571579678465196032><:smugDev:571579678465196032><:smugDev:571579678465196032><:smugDev:571579678465196032>")
+      await az_channel.send(embed = devin_embed)
+      await az_channel.send("<@116009569045446657> <:smugDev:571579678465196032><:smugDev:571579678465196032><:smugDev:571579678465196032><:smugDev:571579678465196032><:smugDev:571579678465196032>")
     elif birthdate == coil_birthday:
-      await channel.send(embed = coil_embed)
-      await channel.send("<@163085358987345920> <:letsgo:350747133017718796><:letsgo:350747133017718796><:letsgo:350747133017718796><:POGGIES:987016376805904424><:POGGIES:987016376805904424>")
+      await az_channel.send(embed = coil_embed)
+      await az_channel.send("<@163085358987345920> <:letsgo:350747133017718796><:letsgo:350747133017718796><:letsgo:350747133017718796><:POGGIES:987016376805904424><:POGGIES:987016376805904424>")
     elif birthdate == cole_birthday:
-      await channel.send(embed = cole_embed)
-      await channel.send("<@116104884335542278> <:NyanPog:957170859641040907><:cole:230168965597495297> <:colethink:332739327421317131><:NyanPog:957170859641040907>" )
+      await az_channel.send(embed = cole_embed)
+      await az_channel.send("<@116104884335542278> <:NyanPog:957170859641040907><:cole:230168965597495297> <:colethink:332739327421317131><:NyanPog:957170859641040907>" )
     elif birthdate == gabe_birthday:
-      await channel.send(embed = gabe_embed)
-      await channel.send("<@132395062330916864> :partying_face::partying_face::partying_face:")
+      await az_channel.send(embed = gabe_embed)
+      await az_channel.send("<@132395062330916864> :partying_face::partying_face::partying_face:")
     elif birthdate == riley_birthday:
-      await channel.send(embed = riley_embed)
-      await channel.send("<@115949042906693639> <:RileyU:571579238914850819> <:rileyJap:314659045262753793><:rileyDrunk:705647960058363904><:riley:230169248738181121>")
+      await az_channel.send(embed = riley_embed)
+      await az_channel.send("<@115949042906693639> <:RileyU:571579238914850819> <:rileyJap:314659045262753793><:rileyDrunk:705647960058363904><:riley:230169248738181121>")
     elif birthdate == ariel_birthday:
-      await channel.send(embed = ariel_embed)
-      await channel.send("<@621529418967547952> <:Bocchi61:1053107792296288276> <:JigglyAngy:1054138457385082972><:Bojji:1030520849784123544>")
+      await az_channel.send(embed = ariel_embed)
+      await az_channel.send("<@621529418967547952> <:Bocchi61:1053107792296288276> <:JigglyAngy:1054138457385082972><:Bojji:1030520849784123544>")
     elif birthdate == matt_birthday:
-      await channel.send(embed = matt_embed)
-      await channel.send("<@113008229411241984> <:Bojji:1030520849784123544><:Bojji:1030520849784123544><:POGGIES:987016376805904424> <:villager:1052970632188534974> <:matt:230169075626541056> <:matt:230169075626541056>")
+      await az_channel.send(embed = matt_embed)
+      await az_channel.send("<@113008229411241984> <:Bojji:1030520849784123544><:Bojji:1030520849784123544><:POGGIES:987016376805904424> <:villager:1052970632188534974> <:matt:230169075626541056> <:matt:230169075626541056>")
     elif birthdate == brend_birthday:
-      await channel.send(embed = brenden_embed)
-      await channel.send("<@115931730854150145> <:brenden:230159979519279104> <:brenden:230159979519279104> <:hypers:1063164818112131182> <:hypers:1063164818112131182> <:brenden:230159979519279104> <:brenden:230159979519279104>")
+      await az_channel.send(embed = brenden_embed)
+      await az_channel.send("<@115931730854150145> <:brenden:230159979519279104> <:brenden:230159979519279104> <:hypers:1063164818112131182> <:hypers:1063164818112131182> <:brenden:230159979519279104> <:brenden:230159979519279104>")
     elif birthdate == noelle_birthday:
-      await channel.send(embed = noelle_embed)
-      await channel.send("<@219286041553534976> :dog: :cat: :goat: :partying_face: ")
+      await az_channel.send(embed = noelle_embed)
+      await az_channel.send("<@219286041553534976> :dog: :cat: :goat: :partying_face: ")
     elif birthdate == joe_birthday:
-      await channel.send(embed = joe_embed)
-      await channel.send("<@115964667637006336> <:joe:230169017699008523> <:joe:230169017699008523> <:pepeok:230538899359793152> <:CacoPog:953152686931443773>")
+      await az_channel.send(embed = joe_embed)
+      await az_channel.send("<@115964667637006336> <:joe:230169017699008523> <:joe:230169017699008523> <:pepeok:230538899359793152> <:CacoPog:953152686931443773>")
     elif birthdate == emily_birthday:
-      await channel.send(embed = emily_embed)
-      await channel.send("<@168060375730880514> :bird: :birthday: :bird: :baby_chick: :parrot: :baby_chick: ")
+      await az_channel.send(embed = emily_embed)
+      await az_channel.send("<@168060375730880514> :bird: :birthday: :bird: :baby_chick: :parrot: :baby_chick: ")
     elif birthdate == calvin_birthday:
-      await channel.send(embed = calvin_embed)
-      await channel.send("<@116011732190756868> <:cal:230168950045016064><:calBalls:677780098497118218> <:cal:230168950045016064>:birthday:  ")
+      await az_channel.send(embed = calvin_embed)
+      await az_channel.send("<@116011732190756868> <:cal:230168950045016064><:calBalls:677780098497118218> <:cal:230168950045016064>:birthday:  ")
     elif birthdate == dan_birthday:
-      await channel.send(embed = dan_embed)
-      await channel.send("<@147600171360845824> <:dan:240621343551258624>:hand_with_index_finger_and_thumb_crossed: :fingers_crossed: <:shinoashock:978776558129012766> <:hyperthink:312732126543872001> <:shinoashock:978776558129012766>")
+      await az_channel.send(embed = dan_embed)
+      await az_channel.send("<@147600171360845824> <:dan:240621343551258624>:hand_with_index_finger_and_thumb_crossed: :fingers_crossed: <:shinoashock:978776558129012766> <:hyperthink:312732126543872001> <:shinoashock:978776558129012766>")
     elif birthdate == mondo_birthday:
-      await channel.send(embed = mondo_embed)
-      await channel.send("<@115908537783287809> <:mondo:230169125928960000> <:howdy:413174711325949952> <:mondo:230169125928960000> <:howdy:413174711325949952> <:pog:979009312783495190>")
+      await az_channel.send(embed = mondo_embed)
+      await az_channel.send("<@115908537783287809> <:mondo:230169125928960000> <:howdy:413174711325949952> <:mondo:230169125928960000> <:howdy:413174711325949952> <:pog:979009312783495190>")
     else:
         print("Error")
 

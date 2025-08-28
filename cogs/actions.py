@@ -151,7 +151,10 @@ class Actions(commands.Cog):
 
 
     stats_name = soup.find('h2', class_='header__header2___1p5Ig header__header___1zII0 PriceTrends-module__regionHeader___pULcn')
-    current_stats_name = str(stats_name.get_text(strip = True))
+    if stats_name:
+      current_stats_name = stats_name.get_text(strip=True)
+    else:
+      current_stats_name = "Unknown Region"
     print(current_stats_name)
 
     lowest_avg = soup.find_all('span', class_='text__lg___1S7OO text__bold___1C6Z_ text__left___1iOw3 PriceTrends-module__priceHeader___fB9X9')
