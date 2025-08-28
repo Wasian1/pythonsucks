@@ -238,7 +238,7 @@ class Games(commands.Cog):
         pd.set_option('display.expand_frame_repr', False)
 
         # Load CSV and treat first column as index
-        kpop_group_data = pd.read_csv('kpop_data/kpop_full_idol_list.csv', index_col=0)
+        kpop_group_data = pd.read_csv('kpop_data/kpop_full_idol_list.csv', encoding="utf-8-sig", quotechar='"', skipinitialspace=True)
 
         # Detect the column that has "Female" or "Male" values
         gender_col = None
