@@ -235,6 +235,13 @@ class Games(commands.Cog):
         pd.set_option('display.expand_frame_repr', False)
 
         kpop_group_data = pd.read_csv('kpop_data/kpop_full_idol_list.csv', header=0)
+
+        print(kpop_group_data.columns.tolist())
+        print(kpop_group_data.head(1))
+
+        # Strip whitespace from all column names
+        kpop_group_data.columns = [c.strip() for c in kpop_group_data.columns]
+
         # If first column has no name, rename to "Gender"
         if kpop_group_data.columns[0] == "" or kpop_group_data.columns[0].startswith("Unnamed"):
           kpop_group_data.rename(columns={kpop_group_data.columns[0]: "Gender"}, inplace=True)
@@ -246,8 +253,6 @@ class Games(commands.Cog):
         boy_real_names_random = random.choice(boy_real_names_list)
 
         boy_name = kpop_group_data.loc[(kpop_group_data['Gender'] == 'Male') & (kpop_group_data['Full Name'] == f"{boy_real_names_random}"), 'Full Name']
-        #boy_names_list = list(boy_names)
-        #random_boy = random.choice(boy_names_list)
 
         random_boy_group = kpop_group_data.loc[(kpop_group_data['Gender'] == 'Male') & (kpop_group_data['Full Name'] == f"{boy_real_names_random}"), 'Group']
 
