@@ -237,15 +237,19 @@ class Games(commands.Cog):
         pd.set_option('display.max_colwidth', 30)
         pd.set_option('display.expand_frame_repr', False)
 
-        # Load CSV and treat first column as index
-        kpop_group_data = pd.read_csv('kpop_data/kpop_full_idol_list.csv', index_col=False, encoding="utf-8-sig", quotechar='"', skipinitialspace=True)
+        kpop_group_data = pd.read_csv(
+          'kpop_data/kpop_full_idol_list.csv',
+          index_col=False,
+          encoding="utf-8-sig",
+          quotechar='"',
+          skipinitialspace=True
+        )
 
-        await ctx.send(logger.info("CSV columns: %s", kpop_group_data.columns.tolist()))
-        # Rename first column to 'Gender'
-        kpop_group_data = kpop_group_data.rename(columns={kpop_group_data.columns[0]: 'Gender'})
+        # Force rename in place
+        kpop_group_data.rename(columns={kpop_group_data.columns[0]: 'Gender'}, inplace=True)
 
-        # Now 'Gender' exists
-        logger.info("Columns after renaming: %s", kpop_group_data.columns.tolist())
+        # Log actual columns to be sure Docker sees it
+        logger.info("Columns after rename: %s", kpop_group_data.columns.tolist())
 
         boy_real_names = kpop_group_data.loc[kpop_group_data['Gender'] == 'Male', 'Full Name']
         boy_real_names_list = list(boy_real_names)
