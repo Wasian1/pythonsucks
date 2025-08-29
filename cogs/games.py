@@ -237,88 +237,71 @@ class Games(commands.Cog):
         pd.set_option('display.max_colwidth', 30)
         pd.set_option('display.expand_frame_repr', False)
 
-        try:
-          # Load CSV
-          kpop_group_data = pd.read_csv(
-              'kpop_data/kpop_full_idol_list.csv',
-              index_col=False,
-              encoding="utf-8-sig",
-              quotechar='"',
-              skipinitialspace=True
-          )
 
-          # Clean column names (remove BOM, whitespace, etc.)
-          kpop_group_data.columns = [c.replace('\ufeff','').strip() for c in kpop_group_data.columns]
+        # Load CSV
+        kpop_group_data = pd.read_csv(
+            'kpop_data/kpop_full_idol_list.csv',
+            index_col=False,
+            encoding="utf-8-sig",
+            quotechar='"',
+            skipinitialspace=True
+        )
 
-          # Send the actual column names to Discord for debugging
-          await ctx.send(f"Columns after cleaning: {kpop_group_data.columns.tolist()}")
+        boy_real_names = kpop_group_data.loc[kpop_group_data['Gender'] == 'Male', 'Full Name']
+        boy_real_names_list = list(boy_real_names)
+        boy_real_names_random = random.choice(boy_real_names_list)
 
-          # Make sure Gender column exists
-          if 'Gender' not in kpop_group_data.columns:
-              await ctx.send("Error: CSV does not contain a 'Gender' column.")
-              return
+        boy_name = kpop_group_data.loc[(kpop_group_data['Gender'] == 'Male') & (kpop_group_data['Full Name'] == f"{boy_real_names_random}"), 'Full Name']
 
-          # Strip whitespace inside 'Gender' values too
-          kpop_group_data['Gender'] = kpop_group_data['Gender'].astype(str).str.strip()
+        random_boy_group = kpop_group_data.loc[(kpop_group_data['Gender'] == 'Male') & (kpop_group_data['Full Name'] == f"{boy_real_names_random}"), 'Group']
 
-          boy_real_names = kpop_group_data.loc[kpop_group_data['Gender'] == 'Male', 'Full Name']
-          boy_real_names_list = list(boy_real_names)
-          boy_real_names_random = random.choice(boy_real_names_list)
+        random_boy_hometown = kpop_group_data.loc[(kpop_group_data['Gender'] == 'Male') & (kpop_group_data['Full Name'] == f"{boy_real_names_random}"), 'Birthplace']
 
-          boy_name = kpop_group_data.loc[(kpop_group_data['Gender'] == 'Male') & (kpop_group_data['Full Name'] == f"{boy_real_names_random}"), 'Full Name']
+        random_boy_country = kpop_group_data.loc[(kpop_group_data['Gender'] == 'Male') & (kpop_group_data['Full Name'] == f"{boy_real_names_random}"), 'Country']
 
-          random_boy_group = kpop_group_data.loc[(kpop_group_data['Gender'] == 'Male') & (kpop_group_data['Full Name'] == f"{boy_real_names_random}"), 'Group']
+        random_boy_birthday = kpop_group_data.loc[(kpop_group_data['Gender'] == 'Male') & (kpop_group_data['Full Name'] == f"{boy_real_names_random}"), 'Date of Birth']
 
-          random_boy_hometown = kpop_group_data.loc[(kpop_group_data['Gender'] == 'Male') & (kpop_group_data['Full Name'] == f"{boy_real_names_random}"), 'Birthplace']
+        random_boy_stage_name = kpop_group_data.loc[(kpop_group_data['Gender'] == 'Male') & (kpop_group_data['Full Name'] == f"{boy_real_names_random}"), 'Stage Name']
 
-          random_boy_country = kpop_group_data.loc[(kpop_group_data['Gender'] == 'Male') & (kpop_group_data['Full Name'] == f"{boy_real_names_random}"), 'Country']
+        random_boy_group1 = random_boy_group.to_string(index=False)
+        random_boy_hometown1 = random_boy_hometown.to_string(index=False)
+        if random_boy_hometown1 == 'NaN':
+          random_boy_hometown1 = ""
+        else:
+          random_boy_hometown1
+        random_boy_country1 = random_boy_country.to_string(index=False)
+        random_boy_birthday1 = random_boy_birthday.to_string(index=False)
+        random_boy_stage_name1 = random_boy_stage_name.to_string(index=False)
+        random_boy_name = boy_name.to_string(index=False)
 
-          random_boy_birthday = kpop_group_data.loc[(kpop_group_data['Gender'] == 'Male') & (kpop_group_data['Full Name'] == f"{boy_real_names_random}"), 'Date of Birth']
+        # Log info for debugging
+        logger.info("Random idol selected:")
+        logger.info("Stage Name: %s", random_boy_stage_name1)
+        logger.info("Full Name: %s", random_boy_name)
+        logger.info("Group: %s", random_boy_group1)
+        logger.info("Birthplace: %s", random_boy_hometown1)
+        logger.info("Country: %s", random_boy_country1)
+        logger.info("Date of Birth: %s", random_boy_birthday1)
 
-          random_boy_stage_name = kpop_group_data.loc[(kpop_group_data['Gender'] == 'Male') & (kpop_group_data['Full Name'] == f"{boy_real_names_random}"), 'Stage Name']
+        async def google_image_search():
+          global male_idol_resp
+          male_idol_resp = (await self.google.search(f"{random_boy_name} {random_boy_group1} kpop", image_search=True))[0]
+          print(male_idol_resp.title)
+          print(male_idol_resp.description)
+          print(male_idol_resp.image_url)
+          print(male_idol_resp.url)
+          return male_idol_resp.image_url
+        await google_image_search()
 
-          random_boy_group1 = random_boy_group.to_string(index=False)
-          random_boy_hometown1 = random_boy_hometown.to_string(index=False)
-          if random_boy_hometown1 == 'NaN':
-            random_boy_hometown1 = ""
-          else:
-            random_boy_hometown1
-          random_boy_country1 = random_boy_country.to_string(index=False)
-          random_boy_birthday1 = random_boy_birthday.to_string(index=False)
-          random_boy_stage_name1 = random_boy_stage_name.to_string(index=False)
-          random_boy_name = boy_name.to_string(index=False)
+        await ctx.send(f"Your idol of the day is {random_boy_stage_name1} !")
+        embed = discord.Embed(
+                title=f"{random_boy_stage_name1}",
+                description=f" Full Name: {boy_real_names_random} \n\n Group: {random_boy_group1} \n\n Hometown: {random_boy_hometown1} {random_boy_country1} \n\n Birthday: {random_boy_birthday1}",
+                color=discord.Color.blurple()
+            )
+        embed.set_image(url=male_idol_resp.image_url)
+        await ctx.send(embed=embed)
 
-          # Log info for debugging
-          logger.info("Random idol selected:")
-          logger.info("Stage Name: %s", random_boy_stage_name1)
-          logger.info("Full Name: %s", random_boy_name)
-          logger.info("Group: %s", random_boy_group1)
-          logger.info("Birthplace: %s", random_boy_hometown1)
-          logger.info("Country: %s", random_boy_country1)
-          logger.info("Date of Birth: %s", random_boy_birthday1)
-
-          async def google_image_search():
-            global male_idol_resp
-            male_idol_resp = (await self.google.search(f"{random_boy_name} {random_boy_group1} kpop", image_search=True))[0]
-            print(male_idol_resp.title)
-            print(male_idol_resp.description)
-            print(male_idol_resp.image_url)
-            print(male_idol_resp.url)
-            return male_idol_resp.image_url
-          await google_image_search()
-
-          await ctx.send(f"Your idol of the day is {random_boy_stage_name1} !")
-          embed = discord.Embed(
-                  title=f"{random_boy_stage_name1}",
-                  description=f" Full Name: {boy_real_names_random} \n\n Group: {random_boy_group1} \n\n Hometown: {random_boy_hometown1} {random_boy_country1} \n\n Birthday: {random_boy_birthday1}",
-                  color=discord.Color.blurple()
-              )
-          embed.set_image(url=male_idol_resp.image_url)
-          await ctx.send(embed=embed)
-        except KeyError as e:
-          await ctx.send(f"KeyError: {e}. Columns present: {kpop_group_data.columns.tolist()}")
-        except Exception as e:
-          await ctx.send(f"Unexpected error: {e}")
 
       elif idol_response.content.lower() == "f":
 
