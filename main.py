@@ -651,7 +651,7 @@ async def birthday_test_1():
   curmonth = str(current_az_month)
   curday = str(current_az_day)
   birthdate = curmonth + " " + curday
-  birthday_send_time = "10:00"
+  birthday_send_time = "22:09"
   print(birthdate)
 
 
