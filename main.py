@@ -637,7 +637,7 @@ async def birthday_test_1():
   print(f"Got channel {az_channel}")
 
   az_timezone = ZoneInfo('US/Arizona')
-  replit_time = datetime.datetime.now()
+  replit_time = datetime.datetime.now(datetime.timezone.utc)
   timechange = replit_time.astimezone(az_timezone)
   current_az_time = timechange.strftime("%H:%M")
   current_az_month = timechange.strftime("%m")
