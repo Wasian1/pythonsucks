@@ -651,11 +651,11 @@ async def birthday_test_1():
   curmonth = str(current_az_month)
   curday = str(current_az_day)
   birthdate = curmonth + " " + curday
-  birthday_send_time = "22:14"
+  birthday_send_time = "22:20"
   print(birthdate)
 
 
-  bot_birthday   = "09 10"
+  bot_birthday   = "9 11"
   nick_c_birthday= "01 10"
   zach_birthday  = "01 11"  
   may_birthday   = "01 19"
