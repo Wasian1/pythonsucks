@@ -15,6 +15,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libffi-dev \
     libssl-dev \
     git \
+    ffmpeg \
+    libsodium23 \
+    libopus0 \
  && rm -rf /var/lib/apt/lists/*
 
 
