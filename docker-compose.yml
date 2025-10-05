@@ -13,7 +13,8 @@ services:
     # Mount DATA ONLY so CSV updates don't require rebuilds.
     # On the host (Pi), ./data maps to /botapp/data inside the container.
     volumes:
-      - ./PythonSucksBot:/python-sucks-bot:rw
+      - ./:/botapp:rw
+
     
     # Lavalink dependency
     depends_on:
@@ -28,11 +29,9 @@ services:
     env_file:
       - settings.env
     environment:
-      # Safe heap size for Raspberry Pi
-      - _JAVA_OPTIONS=-Xms128M -Xmx512M
+      - JAVA_OPTS=-Xms128M -Xmx512M
     volumes:
       - ./lavalink/application.yml:/opt/Lavalink/application.yml
-
 
     # Optional healthcheck to ensure the container is "healthy"
     # (uncomment and adapt to your bot if you expose a health endpoint or add a small script)
