@@ -13,7 +13,8 @@ lavalink:
       vimeo: true
       http: true
       local: false
-    filters: true
+    filters:
+      volume: true
 
 # Optional: Logging settings (keep minimal for Pi)
 logging:
