@@ -13,7 +13,7 @@ services:
     # Mount DATA ONLY so CSV updates don't require rebuilds.
     # On the host (Pi), ./data maps to /botapp/data inside the container.
     volumes:
-      - ./pythonsucksbot:/python-sucks-bot:rw
+      - ./PythonSucksBot:/python-sucks-bot:rw
     
     # Lavalink dependency
     depends_on:
