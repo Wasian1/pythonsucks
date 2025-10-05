@@ -55,32 +55,30 @@ class Bot(commands.Bot):
         super().__init__(command_prefix=get_prefix,description = 'Hebi Kyoko が　来た！！！', intents=intents)
 
     async def setup_hook(self) -> None:
+      await self.wait_until_ready()  # ensure the bot is logged in
 
-        # Wait until bot is logged in
-        await self.wait_until_ready()
+      # Load extensions
+      for extension in self.initial_extensions:
+        try:
+            await self.load_extension(extension)
+        except Exception as e:
+            print(f"Failed to load extension {extension}: {e}")
 
-        # Try connecting Lavalink repeatedly until successful
-        connected = False
-        while not connected:
-            try:
-                nodes = [wavelink.Node(uri=f"http://lavalink:2333", password="Doughnuts12#")]
-                await wavelink.Pool.connect(nodes=nodes, client=self, cache_capacity=None)
-                connected = True
-            except Exception as e:
-                print(f"Failed to connect Lavalink: {e}, retrying in 5s")
-                await asyncio.sleep(5)
+      # Start your birthday task
+      birthday_test_1.start()
 
-
-        # Load extensions
-        for extension in self.initial_extensions:
-            try:
-                await self.load_extension(extension)
-            except Exception as e:
-                print(f'Failed to load extension {extension}: {e}')
-        birthday_test_1.start()
-
-        # cache_capacity is EXPERIMENTAL. Turn it off by passing None
-        await wavelink.Pool.connect(nodes=nodes, client=self, cache_capacity=None)
+      # Lavalink connection with retry
+      connected = False
+      while not connected:
+        try:
+            print("Trying to connect Lavalink...")
+            nodes = [wavelink.Node(uri="ws://lavalink:2333", password="Doughnuts12#")]
+            await wavelink.Pool.connect(nodes=nodes, client=self, cache_capacity=None)
+            connected = True
+            print("Lavalink connected!")
+        except Exception as e:
+            print(f"Failed to connect Lavalink: {e}, retrying in 5s")
+            await asyncio.sleep(5)
 
     async def on_ready(self) -> None:
         logging.info(f"Logged in: {self.user} | {self.user.id}")
