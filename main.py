@@ -55,7 +55,22 @@ class Bot(commands.Bot):
         super().__init__(command_prefix=get_prefix,description = 'Hebi Kyoko が　来た！！！', intents=intents)
 
     async def setup_hook(self) -> None:
-        nodes = [wavelink.Node(uri=f"http://lavalink:2333", password="Doughnuts12#")]
+
+        # Wait until bot is logged in
+        await self.wait_until_ready()
+
+        # Try connecting Lavalink repeatedly until successful
+        connected = False
+        while not connected:
+            try:
+                nodes = [wavelink.Node(uri=f"http://lavalink:2333", password="Doughnuts12#")]
+                await wavelink.Pool.connect(nodes=nodes, client=self, cache_capacity=None)
+                connected = True
+            except Exception as e:
+                print(f"Failed to connect Lavalink: {e}, retrying in 5s")
+                await asyncio.sleep(5)
+
+
         # Load extensions
         for extension in self.initial_extensions:
             try:
