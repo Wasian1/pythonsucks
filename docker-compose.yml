@@ -25,8 +25,8 @@ services:
     restart: always
     ports:
       - "2333:2333" # expose if external needed
-    environment:
-      - LAVALINK_PASSWORD=${LAVALINK_PASSWORD}   # pass from env
+    env_file:
+      - settings.env
     volumes:
       - ./lavalink/application.yml:/opt/Lavalink/application.yml
 
