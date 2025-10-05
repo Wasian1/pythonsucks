@@ -1,0 +1,23 @@
+server:
+  port: 2333   # Lavalink's internal port
+  address: 0.0.0.0  # Listen on all interfaces
+
+lavalink:
+  server:
+    password: ${LAVALINK_PASSWORD}   # <-- must match your bot's Wavelink config
+    sources:
+      youtube: true
+      bandcamp: true
+      soundcloud: true
+      twitch: true
+      vimeo: true
+      http: true
+      local: false
+    filters: true
+
+# Optional: Logging settings (keep minimal for Pi)
+logging:
+  level:
+    root: INFO
+    lavalink: INFO
+
