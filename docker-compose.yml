@@ -28,10 +28,10 @@ services:
       - "2333:2333" # expose if external needed
     env_file:
       - settings.env
-    environment:
-      JAVA_OPTS: "-Xms128M -Xmx512M -Duser.language=en -Duser.country=US"
     volumes:
       - ./lavalink/application.yml:/opt/Lavalink/application.yml
+    command: >
+      java -Xms128M -Xmx512M -jar Lavalink.jar
 
     # Optional healthcheck to ensure the container is "healthy"
     # (uncomment and adapt to your bot if you expose a health endpoint or add a small script)
