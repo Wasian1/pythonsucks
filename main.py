@@ -15,6 +15,8 @@ from spotipy.oauth2 import SpotifyClientCredentials
 import wavelink
 import logging
 
+LAVALINK_PASSOWORD = os.getenv("LAVALINK_PASSWORD")
+
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "settings.env"))
 
 target_message_id = 1068981877425315982
@@ -53,7 +55,7 @@ class Bot(commands.Bot):
         super().__init__(command_prefix=get_prefix,description = 'Hebi Kyoko が　来た！！！', intents=intents)
 
     async def setup_hook(self) -> None:
-        nodes = [wavelink.Node(uri=f"ws://lava-v4.ajieblogs.eu.org:80", password="https://dsc.gg/ajidevserver")]
+        nodes = [wavelink.Node(uri=f"ws://lavalink:2333", password=LAVALINK_PASSOWORD)]
         # Load extensions
         for extension in self.initial_extensions:
             try:

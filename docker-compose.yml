@@ -14,6 +14,22 @@ services:
     # On the host (Pi), ./data maps to /botapp/data inside the container.
     volumes:
       - ./data:/botapp/data:rw
+    
+    # Lavalink dependency
+    depends_on:
+      - lavalink
+  
+  lavalink:
+    image: ghcr.io/freyacodes/lavalink:latest
+    container_name: lavalink
+    restart: always
+    ports:
+      - "2333:2333" # expose if external needed
+    environment:
+      - LAVALINK_PASSWORD=${LAVALINK_PASSWORD}   # pass from env
+    volumes:
+      - ./lavalink/application.yml:/opt/Lavalink/application.yml
+
 
     # Optional healthcheck to ensure the container is "healthy"
     # (uncomment and adapt to your bot if you expose a health endpoint or add a small script)
