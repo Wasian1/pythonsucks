@@ -29,8 +29,7 @@ services:
     env_file:
       - settings.env
     environment:
-      - JAVA_OPTS=-Xms128M -Xmx512M
-      - DEFAULT_JVM_OPTS=
+      JAVA_OPTS: "-Xms128M -Xmx512M -Duser.language=en -Duser.country=US"
     volumes:
       - ./lavalink/application.yml:/opt/Lavalink/application.yml
 
