@@ -13,7 +13,7 @@ services:
     # Mount DATA ONLY so CSV updates don't require rebuilds.
     # On the host (Pi), ./data maps to /botapp/data inside the container.
     volumes:
-      - ./:/botapp:rw
+      - ./PythonSucksBot:/botapp:rw
 
     
     # Lavalink dependency
@@ -30,6 +30,7 @@ services:
       - settings.env
     environment:
       - JAVA_OPTS=-Xms128M -Xmx512M
+      - DEFAULT_JVM_OPTS=
     volumes:
       - ./lavalink/application.yml:/opt/Lavalink/application.yml
 
