@@ -55,27 +55,28 @@ class Bot(commands.Bot):
         super().__init__(command_prefix=get_prefix,description = 'Hebi Kyoko が　来た！！！', intents=intents)
 
     async def setup_hook(self) -> None:
-      await self.wait_until_ready()  # ensure the bot is logged in
-
       # Load extensions
       for extension in self.initial_extensions:
         try:
             await self.load_extension(extension)
         except Exception as e:
-            print(f"Failed to load extension {extension}: {e}")
+            print(f'Failed to load extension {extension}: {e}')
 
-      # Start your birthday task
+      # Start birthday task
       birthday_test_1.start()
 
-      # Lavalink connection with retry
-      connected = False
-      while not connected:
+      # Start Lavalink connection in background
+      asyncio.create_task(self.connect_lavalink())
+
+    async def connect_lavalink(self):
+      """Connect Lavalink in background with retry."""
+      while True:
         try:
             print("Trying to connect Lavalink...")
-            nodes = [wavelink.Node(uri="ws://lavalink:2333", password="Doughnuts12#")]
+            nodes = [wavelink.Node(uri="ws://lavalink:2333", password=LAVALINK_PASSWORD)]
             await wavelink.Pool.connect(nodes=nodes, client=self, cache_capacity=None)
-            connected = True
             print("Lavalink connected!")
+            return
         except Exception as e:
             print(f"Failed to connect Lavalink: {e}, retrying in 5s")
             await asyncio.sleep(5)
