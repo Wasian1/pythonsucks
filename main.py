@@ -55,7 +55,7 @@ class Bot(commands.Bot):
         super().__init__(command_prefix=get_prefix,description = 'Hebi Kyoko が　来た！！！', intents=intents)
 
     async def setup_hook(self) -> None:
-        nodes = [wavelink.Node(uri=f"http://lavalink:2333", password=LAVALINK_PASSWORD)]
+        nodes = [wavelink.Node(uri=f"http://lavalink:2333", password="Doughnuts12#")]
         # Load extensions
         for extension in self.initial_extensions:
             try:
