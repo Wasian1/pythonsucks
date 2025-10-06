@@ -14,6 +14,7 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 import wavelink
 import logging
+import aiohttp
 
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "settings.env"))
 
@@ -67,6 +68,19 @@ class Bot(commands.Bot):
 
       # Start Lavalink connection in background
       await self.connect_lavalink()
+    async def wait_for_lavalink():
+      url = "http://lavalink:2333"
+      while True:
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url, timeout=5) as resp:
+                    if resp.status == 401:  # Lavalink responds with 401 when ready
+                        print("Lavalink is ready!")
+                        return
+        except Exception:
+            pass
+        print("Waiting for Lavalink...")
+        await asyncio.sleep(2)
 
     async def connect_lavalink(self):
       while True:
