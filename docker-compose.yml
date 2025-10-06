@@ -18,8 +18,8 @@ services:
     
     # Lavalink dependency
     depends_on:
-      - lavalink:
-        condition: service_healthy
+      - lavalink
+
   
   lavalink:
     image: ghcr.io/freyacodes/lavalink:latest
