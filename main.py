@@ -66,9 +66,9 @@ class Bot(commands.Bot):
       # Start birthday task
       birthday_test_1.start()
 
-      # Start Lavalink connection in background
-      await self.connect_lavalink()
-    async def wait_for_lavalink():
+      asyncio.create_taks(self.connect_lavalink())
+
+    async def wait_for_lavalink(self):
       url = "http://lavalink:2333"
       while True:
         try:
@@ -83,6 +83,7 @@ class Bot(commands.Bot):
         await asyncio.sleep(2)
 
     async def connect_lavalink(self):
+      await self.wait_for_lavalink()
       while True:
         try:
             print("Trying to connect Lavalink...")
