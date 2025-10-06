@@ -69,16 +69,15 @@ class Bot(commands.Bot):
       await self.connect_lavalink()
 
     async def connect_lavalink(self):
-      """Connect Lavalink in background with retry."""
       while True:
         try:
             print("Trying to connect Lavalink...")
             nodes = [wavelink.Node(uri="http://lavalink:2333", password="Doughnuts12")]
             await wavelink.Pool.connect(nodes=nodes, client=self, cache_capacity=None)
-            print("Lavalink connected!")
+            print("Lavalink connected successfully!")
             return
         except Exception as e:
-            print(f"Failed to connect Lavalink: {e}, retrying in 5s")
+            print(f"Failed to connect Lavalink: {e}")
             await asyncio.sleep(5)
 
     async def on_ready(self) -> None:
