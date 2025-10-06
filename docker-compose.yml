@@ -13,12 +13,13 @@ services:
     # Mount DATA ONLY so CSV updates don't require rebuilds.
     # On the host (Pi), ./data maps to /botapp/data inside the container.
     volumes:
-      - ./:/botapp:rw
+      - ~/OneDrive/Desktop/PythonSucksBot:/botapp:rw
 
     
     # Lavalink dependency
     depends_on:
-      - lavalink
+      - lavalink:
+        condition: service_healthy
   
   lavalink:
     image: ghcr.io/freyacodes/lavalink:latest
@@ -33,7 +34,11 @@ services:
 
     entrypoint: ["java"]
     command: ["-Xms128M", "-Xmx512M", "-Duser.language=en", "-Duser.country=US", "-jar", "Lavalink.jar"]
-
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:2333"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     # Optional healthcheck to ensure the container is "healthy"
     # (uncomment and adapt to your bot if you expose a health endpoint or add a small script)
     # healthcheck:

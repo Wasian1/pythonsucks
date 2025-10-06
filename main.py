@@ -73,7 +73,7 @@ class Bot(commands.Bot):
       while True:
         try:
             print("Trying to connect Lavalink...")
-            nodes = [wavelink.Node(uri="ws://lavalink:2333", password=LAVALINK_PASSWORD)]
+            nodes = [wavelink.Node(uri="ws://lavalink:2333", password="Doughnuts12")]
             await wavelink.Pool.connect(nodes=nodes, client=self, cache_capacity=None)
             print("Lavalink connected!")
             return

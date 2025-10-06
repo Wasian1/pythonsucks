@@ -4,7 +4,7 @@ server:
 
 lavalink:
   server:
-    password: "Doughnuts12#" #${LAVALINK_PASSWORD}   # <-- must match your bot's Wavelink config
+    password: Doughnuts12 #${LAVALINK_PASSWORD}   # <-- must match your bot's Wavelink config
     sources:
       youtube: true
       bandcamp: true
