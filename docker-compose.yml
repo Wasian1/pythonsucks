@@ -22,8 +22,7 @@ services:
 
   
   lavalink:
-    image: ghcr.io/lavalink-devs/lavalink:4-alpine
-    platform: linux/arm64/v8
+    image: ghcr.io/lavalink-devs/lavalink:4
     container_name: lavalink
     restart: always
     ports:
