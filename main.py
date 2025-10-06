@@ -83,17 +83,34 @@ class Bot(commands.Bot):
         await asyncio.sleep(2)
 
     async def connect_lavalink(self):
+      # Wait until Lavalink HTTP endpoint responds with 401
       await self.wait_for_lavalink()
-      while True:
+      print("HTTP Lavalink ready, starting WS connection...")
+
+      connected = False
+      while not connected:
         try:
-            print("Trying to connect Lavalink...")
-            nodes = [wavelink.Node(uri="ws://lavalink:2333", password="Doughnuts12")]
+            nodes = [
+                wavelink.Node(
+                    uri="ws://lavalink:2333",
+                    password="Doughnuts12",
+                    identifier="MAIN"  # optional
+                )
+            ]
             await wavelink.Pool.connect(nodes=nodes, client=self, cache_capacity=None)
-            print("Lavalink connected successfully!")
-            return
+            
+            # Confirm node is in CONNECTED state
+            node = wavelink.Pool.get_node()
+            if node.is_available:
+                print(f"Lavalink WS connected successfully! Node: {node.identifier}")
+                connected = True
+            else:
+                raise Exception("Node not in CONNECTED state yet")
+
         except Exception as e:
-            print(f"Failed to connect Lavalink: {e}")
+            print(f"Failed to connect Lavalink WS: {e}. Retrying in 5s...")
             await asyncio.sleep(5)
+
 
     async def on_ready(self) -> None:
         logging.info(f"Logged in: {self.user} | {self.user.id}")
