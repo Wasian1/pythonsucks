@@ -66,7 +66,7 @@ class Bot(commands.Bot):
       birthday_test_1.start()
 
       # Start Lavalink connection in background
-      asyncio.create_task(self.connect_lavalink())
+      await self.connect_lavalink()
 
     async def connect_lavalink(self):
       """Connect Lavalink in background with retry."""
