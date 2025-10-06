@@ -22,7 +22,7 @@ services:
 
   
   lavalink:
-    image: ghcr.io/lavalink-devs/lavalink:4-distroless
+    image: ghcr.io/lavalink-devs/lavalink:4
     container_name: lavalink
     restart: always
     ports:
