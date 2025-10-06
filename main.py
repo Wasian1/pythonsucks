@@ -66,7 +66,7 @@ class Bot(commands.Bot):
       # Start birthday task
       birthday_test_1.start()
 
-      asyncio.create_taks(self.connect_lavalink())
+      asyncio.create_task(self.connect_lavalink())
 
     async def wait_for_lavalink(self):
       url = "http://lavalink:2333"
