@@ -3,10 +3,14 @@ server:
   address: 0.0.0.0  # Listen on all interfaces
 
 lavalink:
+  plugins:
+    # Replace VERSION with the current version as shown by the Releases tab or a long commit hash for snapshots.
+    - dependency: "dev.lavalink.youtube:youtube-plugin:1.14.0"
+      snapshot: false # Set to true if you want to use a snapshot version.
   server:
     password: "Doughnuts12" 
     sources:
-      youtube: true
+      youtube: false
       bandcamp: true
       soundcloud: true
       twitch: true
