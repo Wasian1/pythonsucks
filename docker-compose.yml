@@ -33,7 +33,7 @@ services:
       - ./lavalink/application.yml:/opt/Lavalink/application.yml
 
     entrypoint: ["java"]
-    command: ["java", "-jar", "Lavalink.jar"]
+    command: ["-Xms128M", "-Xmx512M", "-Duser.language=en", "-Duser.country=US", "-jar", "Lavalink.jar"]
     healthcheck:
       test: ["CMD-SHELL", "curl -sf -H 'Authorization: ${LAVALINK_PASSWORD}' http://localhost:2333/version || exit 1"]
       interval: 10s
