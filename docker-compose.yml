@@ -33,9 +33,9 @@ services:
       - ./lavalink/application.yml:/opt/Lavalink/application.yml
 
     entrypoint: ["java"]
-    command: ["CMD-SHELL", "curl -sf -H 'Authorization: ${LAVALINK_PASSWORD}' http://localhost:2333/version || exit 1"]
+    command: ["java", "-jar", "Lavalink.jar"]
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:2333"]
+      test: ["CMD-SHELL", "curl -sf -H 'Authorization: ${LAVALINK_PASSWORD}' http://localhost:2333/version || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
