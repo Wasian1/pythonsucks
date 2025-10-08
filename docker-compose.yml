@@ -29,8 +29,6 @@ services:
       - "2333:2333" # expose if external needed
     env_file:
       - settings.env
-    environment:
-      - LAVALINK_PASSWORD=${LAVALINK_PASSWORD}
     volumes:
       - ./lavalink/application.yml:/opt/Lavalink/application.yml
 
