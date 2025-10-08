@@ -93,7 +93,7 @@ class Bot(commands.Bot):
             nodes = [
                 wavelink.Node(
                     uri="ws://lavalink:2333",
-                    password="Doughnuts12",
+                    password=LAVALINK_PASSWORD,
                     identifier="MAIN"  # optional
                 )
             ]

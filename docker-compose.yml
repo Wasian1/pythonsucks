@@ -29,11 +29,13 @@ services:
       - "2333:2333" # expose if external needed
     env_file:
       - settings.env
+    environment:
+      - LAVALINK_PASSWORD=${LAVALINK_PASSWORD}
     volumes:
       - ./lavalink/application.yml:/opt/Lavalink/application.yml
 
     entrypoint: ["java"]
-    command: ["-Xms128M", "-Xmx512M", "-Duser.language=en", "-Duser.country=US", "-jar", "Lavalink.jar"]
+    command: ["CMD-SHELL", "curl -sf -H 'Authorization: ${LAVALINK_PASSWORD}' http://localhost:2333/version || exit 1"]
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:2333"]
       interval: 10s

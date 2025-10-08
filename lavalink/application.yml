@@ -8,7 +8,7 @@ lavalink:
     - dependency: "dev.lavalink.youtube:youtube-plugin:1.14.0"
       snapshot: false # Set to true if you want to use a snapshot version.
   server:
-    password: "Doughnuts12" 
+    password: ${LAVALINK_PASSWORD} 
     sources:
       youtube: false
       bandcamp: true
